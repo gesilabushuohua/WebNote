@@ -1,6 +1,18 @@
 /**js 继承方式*/
-
 // 父类
+/* 执行报错 
+class father {
+  constructor(name) {
+    this.name = name;
+    this.say = function () {
+      console.log(`say  ${name}`);
+    };
+  }
+  action () {
+    console.log('action');
+  }
+} */
+
 function father(name) {
   this.name = name;
   this.say = function() {
