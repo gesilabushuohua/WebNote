@@ -4,7 +4,7 @@
 function father(name) {
   this.name = name;
   this.say = function() {
-    console.log(`say${name}`);
+    console.log(`say  ${name}`);
   };
 }
 father.prototype.action = function() {
@@ -12,11 +12,12 @@ father.prototype.action = function() {
 };
 
 //  原型链继承
+/** 无法传参 */
 function childrenOne(name) {
   this.name = name;
 }
 childrenOne.prototype = new father();
-let children1 = childrenOne('children1');
+let children1 = new childrenOne('children1');
 
 //  构造函数继承
 function childrenTwo(name) {
@@ -41,6 +42,7 @@ let children3 = new childrenThree('children3');
 
 //  原型链继承
 //  输出对象，承载继承的原型
+/** 无法传参 */
 function contain(obj) {
   function fn() {}
   fn.prototype = obj;
@@ -61,9 +63,10 @@ let children4 = contain(fa4);
 function subObject(obj, name) {
   let sub = contain(obj);
   sub.name = name;
+  return sub;
 }
 let fa5 = new father();
-let children5 = subObject(fa5, 'children5');
+let children5 = new subObject(fa5, 'children5');
 
 //  寄生组合式继承
 //  组合 解决组合式两次调用构造函数属性的缺点

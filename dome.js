@@ -7,4 +7,12 @@
   children4.say();
   children5.say();
   children6.say();
+  /** result 
+      say  undefined
+      say  children2
+      say  children3
+      say  undefined
+      say  undefined
+      say  children6
+   */
 })();
