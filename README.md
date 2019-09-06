@@ -1,4 +1,9 @@
-# WebNote
-1、 web learing notes, about html5、css3 、js
-2、 study use github
+一、已写
+js 继承
 
+二、计划
+js Object
+js Array
+js 数据监听
+js dom event 位置信息
+js 原型链
