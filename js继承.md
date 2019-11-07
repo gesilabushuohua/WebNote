@@ -14,7 +14,9 @@ Father.prototype.sayName = function() {
   console.log(`say ${this.name}`);
 };
 
-//  原型链继承
+#   原型链继承
+
+```javascript
 function Son1(name) {
   this.name = name;
 }
@@ -56,7 +58,11 @@ console.log({father,son2});
 father.sayName();
 son2.sayName(); 
 */
+```
 
+# 组合继承函数
+
+```javascript
 //组合继承函数（或伪经典继承），原型链和借用构造函数的组合
 //  缺点，父类构造函数被调用两次
 function Son3(name) {
@@ -108,7 +114,11 @@ son32.action();
 son3.action();
 console.log(father.name, son3.name, son32.name); 
 */
+```
 
+# 原型式继承
+
+```javascript
 //  原型式继承
 function Son4(name) {
   this.name = name;
@@ -153,7 +163,11 @@ yetAnotherPerson.friends.push("Barbie");
 console.log(person.friends); //"Shelby,Court,Van,Rob,Barbie"
 console.log({person,anotherPerson,yetAnotherPerson}); 
 */
+```
 
+# 寄生式继承
+
+```javascript
 //  寄生式继承，将原型式继承再次封装，在对象上扩展新方法（？，后期补充）
 function Son5(name) {
   this.name = name;
@@ -168,8 +182,11 @@ Son5.prototype.action = function() {
 let son5 = new Son5('son5');
 son5.action(); 
 */
+```
 
+#  寄生组合式继承
 
+```javascript
 //  寄生组合式继承
 function Son6(name){
   Father.call(this,name);
@@ -211,12 +228,12 @@ yetAnotherPerson.friends.push("Barbie");
 
 console.log(person.friends); //"Shelby,Court,Van,Rob,Barbie"
 console.log({person,anotherPerson,yetAnotherPerson}); 
-
+```
 
 /*  扩展
 1、js 原型链
  查阅 js_prototype
- 
+
 2、js call、apply、bind 的区别及其实现
  查阅 js_call_apply_bind
 */
