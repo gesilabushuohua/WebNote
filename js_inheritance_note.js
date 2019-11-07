@@ -196,10 +196,27 @@ let son6 = new Son6('son6');
 son6.sayName();
 
 
+let person = {
+  name: "Nicholas",
+  friends: ["Shelby", "Court", "Van"]
+};
+
+let anotherPerson = Object.create(person);
+anotherPerson.name = "Greg";
+anotherPerson.friends.push("Rob");
+
+let yetAnotherPerson = Object.create(person);
+yetAnotherPerson.name = "Linda";
+yetAnotherPerson.friends.push("Barbie");
+
+console.log(person.friends); //"Shelby,Court,Van,Rob,Barbie"
+console.log({person,anotherPerson,yetAnotherPerson}); 
 
 
-
-
-
-
-
+/*  扩展
+1、js 原型链
+ 查阅 js_prototype
+ 
+2、js call、apply、bind 的区别及其实现
+ 查阅 js_call_apply_bind
+*/
