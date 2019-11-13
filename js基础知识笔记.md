@@ -282,6 +282,20 @@ var myObj = new Object();
 myObj.key = value;
 ```
 
+存储在对象内部的值，我们称之属性，是这些属性得名称，它们就像指针（从技术角度来说就是引用）一样，指向这些值真正存储位置。
+
+对象计算属性
+
+```javascript
+var prefix = "foo";
+var myObject = {
+[prefix + "bar"]:"hello",
+[prefix + "baz"]: "world"
+};
+myObject["foobar"]; // hello
+myObject["foobaz"]; // world
+```
+
 
 
 ##### proto  和 prototype
