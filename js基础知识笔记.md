@@ -159,6 +159,8 @@ foo = function() {
 
 使用 let 进行的声明不会在块作用域中提升。
 
+**var、let 、const 变量区别**，在于变量存储范围？？？？？
+
 
 
 ### 作用域闭包
@@ -200,12 +202,12 @@ a.fun(3);//0,执行第二次，，返回一个函数 fun
 
 调用过程中，函数执行后，函数内部**参数的变化**，及返回**结果**；
 
-# 二、this和对象原型
+# 二、this、对象、原型
 
 
-当前内容，用于对象创建、关联和扩展。
+this和原型，主要用于对象创建、关联和扩展。
 
-### 关键字this及其指向
+### 关键字 this 
 
 **this的意义**，this 提供了一种更优雅的方式来隐式“传递”一个对象的引用（与显示传递上下文对象相较），因此可以将 API 设计得更加简洁并且易于复用。在对象和原型中，函数可以自动引用合适的上下问对象。
 
@@ -269,6 +271,8 @@ ES6 箭头函数与this**，箭头函数 this 始终指向函数定义时的 thi
 
 ### 对象
 
+#### 概念
+
 对象通过两种形式定义：声明（文字）形式和构造形式。
 
 ```javascript
@@ -310,13 +314,112 @@ someFoo; // function foo(){..}
 myObject.foo; // function foo(){..}
 ```
 
-  
+
+
+#### 对象拷贝
+
+```javascript
+function anotherFunction() { /*..*/ }
+var anotherObject = {
+	c: true
+};
+var anotherArray = [];
+var myObject = {
+	a: 2,
+	b: anotherObject, // 引用，不是复本！
+	c: anotherArray, // 另一个引用！
+	d: anotherFunction
+};
+anotherArray.push( anotherObject, myObject );
+```
+
+浅拷贝，复制出的新对象的 a 会复制旧对象中 a 的引用值。
+
+深拷贝，会复制 myObject、anotherObject、anotherArray，而 anotherArray 引用了前两对象，这样就会由于循环导致死循环。对于这类问题，有一种巧妙地复制方法 (这种方法需要保证对象是 JSON 安全的)：
+
+```javascript
+var newObj = JSON.parse( JSON.stringify( someObj ) );
+```
+
+浅拷贝只复制值，改变对象值不会影响另一个，深拷贝复制属性的引用，改变对象值会改变对象的值。
+
+
+
+疑点**：什么情况下，修改拷贝对象的值会改变另一对象的值？
+
+**答案**：参考 [Js引用类型赋值](https://juejin.im/post/5becd0e9e51d4543cd17310c)
+
+js 引用类型赋值，js 具有两种数据类型，值类型(基本类型)和引用类型。详情阅读类型和语法之类型
+
+
+
+#### 属性
+
+es5 前 Javascript 语言本身没有提供可以检测属性特征的方法，比如判断属性是否只读，es5 开始，所有的属性都具备了属性描述符。
+
+对象所有属性都有名称，属性的特征，包括值、可列举、可配置、可写、get、set。
+
+```javascript
+var myObject = {
+	a:2
+};
+Object.getOwnPropertyDescriptor( myObject, "a" );
+// 打印
+/*
+{
+ value: 2, //值
+ writable: true,//可写，是否可写值
+ enumerable: true,//可列举，在 for..in 中
+ //可配置，是否可以使用 defineProperty 方法来修改属性描述符，修改为false，单向操作，无法撤销
+ configurable: true
+ }
+ */
+
+```
+
+在创建普通属性时属性描述符会使用默认值，我们也可以使用 object.defineProperty(..)来添加一个新属性或者修改一个已有属性并对特性进行设置。
+
+
+
+#### 不变性
+
+设置属性或对象不变的方法
+
+```javascript
+var myObject = {};
+
+// 1、设置属性 不可读，不可配置
+Object.defineProperty( myObject, "FAVORITE_NUMBER", {
+value: 42,
+writable: false,
+configurable: false
+} );
+
+//2、禁止扩展
+Object.preventExtensions( myObject );
+
+//3、密封
+//Object.seal 创建一个“密封”的对象，这个方法实际上会在一个现有对象上调用
+//Object.preventExtensions(..) 并把所有现有属性标记为 configurable:false 
+Object.seal(myObject);
+
+//4、冻结
+Object.freeze(myObject);
+```
+
+
+
+#### 常用 API
+
+
+
+### 原型
 
 ### proto  和 prototype
 
 __proto__ ， 每一个对象对应一个原型对象，并从原先对象继承属性和方法
 
-对象 proto **属性**的值就是它所对应的**原型对象**
+对象 proto **属性**的值就是它所对应的**原型对象**  
 
 ```javascript
 var one = {x: 1};
@@ -332,7 +435,9 @@ one.toString === one.__proto__.toString // true
 
 类型和语法
 
+### 数组
 
+### 类型判断
 
 # 四、异步和性能
 
@@ -345,4 +450,6 @@ one.toString === one.__proto__.toString // true
 对象解析
 
 设置默认值
+
+封装
 
