@@ -1,4 +1,6 @@
-#  序、编译原理
+  本文主要为 《你不知道的Javascript的秘密》摘抄笔记，个人 js 基础大纲，非原创。
+
+# 序、编译原理
 
 ### 分词/词法分析
 
@@ -343,7 +345,7 @@ var newObj = JSON.parse( JSON.stringify( someObj ) );
 
 浅拷贝只复制值，改变对象值不会影响另一个，深拷贝复制属性的引用，改变对象值会改变对象的值。
 
-
+javascript 中函数无比如法（标准、可靠的方法）真正的复制，只要复制对共享函数对象的引入，如果修改了共享的函数对象，添加了一个属性，原有的对象都会受到影响。
 
 疑点**：什么情况下，修改拷贝对象的值会改变另一对象的值？
 
@@ -379,6 +381,25 @@ Object.getOwnPropertyDescriptor( myObject, "a" );
 
 在创建普通属性时属性描述符会使用默认值，我们也可以使用 object.defineProperty(..)来添加一个新属性或者修改一个已有属性并对特性进行设置。
 
+getter、setter部分改写默认操作，只能应用在单属性上，无法应用在整个对象上，getter是一个隐藏函数，会在获取属性值时调用，setter 也是一个隐藏函数，在设置属性值时调用。
+
+setter，会覆盖单个属性默认[[ put ]]，也就是赋值操作，通常来说getter和setter 是成对出现的，只定义 一个的话通常会产生意料之外的行为。
+
+```javascript
+var myObject = {
+	// 给 a 定义一个 getter
+	get a() {
+		return this._a_;
+	},
+	// 给 a 定义一个 setter
+	set a(val) {
+		this._a_ = val * 2;
+	}
+};
+myObject.a = 2;
+myObject.a; // 4
+```
+
 
 
 #### 不变性
@@ -409,11 +430,107 @@ Object.freeze(myObject);
 
 
 
-#### 常用 API
+#### Object  构造函数方法
+
+```javascript
+//通过复制一个或多个对象来创建一个新的对象
+Object.assign();
+
+//使用指定原型对象属性创建一个新对象
+Object.create();
+
+//给对象添加一个属性并指定该属性的配置
+Object.definePropertie();
+
+//给对象添加多个属性并分别指定它们的配置
+Object.defineProperties();
+
+//返回给定对象自身可枚举属性的 [key, value] 数组
+Object.entries();
+
+//冻结对象,其他代码不能删除或更改任何属性
+Object.freeze();
+
+//返回对象指定的属性配置
+Object.getOwnPropertyDescriptor();
+
+//返回一个数组,它包含了指定对象所有的可枚举或不可枚举的属性名
+Object.getOwnPropertyNames();
+
+//返回一个数组,它包含了指定对象自身所有的符号属性
+Object.getOwnPropertySymbols();
+
+//返回指定对象的原型对象
+Object.getPrototypeOf();
+
+//比较两个值是否相同,所有 NaN 值都相等（这与==和===不同）
+Object.is();
+
+//判断对象是否可扩展
+Object.isExtensible();
+
+//判断对象是否已经冻结
+Object.isFrozen();
+
+//判断对象是否已经密封
+Object.isSealed();
+
+//返回一个包含所有给定对象自身可枚举属性名称的数组
+Object.keys();
+
+//防止对象的任何扩展
+Object.preventExtensions();
+
+//防止其他代码删除对象的属性
+Object.seal();
+
+//设置对象的原型（即内部 [[Prototype]] 属性）
+Object.setPrototypeOf();
+
+//返回给定对象自身可枚举值的数组
+Object.values();
+
+```
 
 
 
-### 原型
+### 混合对象“类”
+
+本节主要介绍，实例化(instantiation)、继承(inheritance)、(相对)多态(polymorphism)、混入(mixin)。
+
+javascript 开发者使用混入来模拟类的复制行为，分为显性和隐式。
+
+显示混入，手动实现复制功能
+
+```javascript
+function mixin( sourceObj, targetObj ) {
+	for (var key in sourceObj) {
+	// 只会在不存在的情况下复制
+		if (!(key in targetObj)) {
+			targetObj[key] = sourceObj[key];
+		}
+	}
+return targetObj;
+}
+```
+
+
+
+
+
+### 原型  [ [  Prototype ] ]
+
+javascript 中的对象有一个特殊的 [[ Prototype ]] 内置属性，其实就是对其他对象的引用。基本所有的对象在创建时 [[ Prototype]] 属性都会赋予一个非空的值。
+
+对于默认的 [[ Get ]] 操作（访问对象属性）来说，如果无法在对象本身找到需要的属性，就会继续访问对象的 [[ Prototype ]] 链。
+
+ 所有普通的 prototype 链最终都会指向内置的 Object.prototype，所有普通的对象都源于（或者把 prototype 链的顶端设置为）这个Object.prototype 对象，所以它包含了 javascript 中许多通用的功能。
+
+
+
+Object.create() 会创 建一个对象，并把这个对象的 [[ Prototype ]] 关联到指定的对象。
+
+
 
 ### proto  和 prototype
 
@@ -453,3 +570,6 @@ one.toString === one.__proto__.toString // true
 
 封装
 
+Proxy 代理
+
+  
