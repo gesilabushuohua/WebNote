@@ -526,7 +526,53 @@ javascript 中的对象有一个特殊的 [[ Prototype ]] 内置属性，其实�
 
  所有普通的 prototype 链最终都会指向内置的 Object.prototype，所有普通的对象都源于（或者把 prototype 链的顶端设置为）这个Object.prototype 对象，所以它包含了 javascript 中许多通用的功能。
 
+```javascript
+myObject.foo = "bar";
+```
 
+如果 foo 即存在 myObject,也存在原型链上层，那就会发生屏蔽，myObject 中包含的 foo 属性会屏蔽原型链上层的所有foo 属性，因为 myObject.foo 总会选择原型链中最底层的 foo 属性。
+
+这个限制只存在 = 赋值中，使用 Object.definePrototype 并不会受到影响。
+
+```javascript
+function Foo() {
+}
+var a = new Foo();
+Object.getPrototypeOf( a ) === Foo.prototype; // true
+```
+
+上述代码中最后得到两个对象，它们之间互相关联，并没有初始化一个类，也没有复制任何行为行为到一个对象中，只是让这两个对象互相关联。
+
+ 继承意味着复制，javascript并不会复制对象属性。相反，javascript 会在两个对象之间创建一个关联，这样一个对象就可以委托访问另一个对象的属性和函数。委托这个术语更加准确的描述 javascript 中的对象关联机制。
+
+```javascript
+function Foo() {
+}
+Foo.prototype.constructor === Foo; // true
+var a = new Foo();
+a.constructor === Foo; // true
+a; // {}
+```
+
+Foo 函数本身并不是构造函数，然而，当普通函数前加上 new 关键字之后，就会把这个函数调用变成一个构造函数调用。实际上， new 会劫持所有普通函数并用构造对象的形式来调用它。函数不是构造函数，但是当且仅当使用 new 时，函数调用会变成“构造函数调用”，换句话说，在Javascript 中对于构造函数最准确的解释是，所有带 new 的**函数调用**。
+
+new 关键字会进行如下操作：
+
+1. 创建一个空的简单Javascript 对象；
+2. 链接该对象到另一个对象；
+3. 将步骤1新创建的对象作为 this 的上下文；
+4. 如果该函数没有返回函数，则返回 this；
+
+
+
+ES6 之前通过设置 ._proto_属性来，修改对象 [[ Prototype ]] 关联。 
+
+```javascript
+// ES6 之前需要抛弃默认的 Bar.prototype
+Bar.ptototype = Object.create( Foo.prototype );
+// ES6 开始可以直接修改现有的 Bar.prototype
+Object.setPrototypeOf( Bar.prototype, Foo.prototype );
+```
 
 Object.create() 会创 建一个对象，并把这个对象的 [[ Prototype ]] 关联到指定的对象。
 
@@ -534,17 +580,41 @@ Object.create() 会创 建一个对象，并把这个对象的 [[ Prototype ]] �
 
 ### proto  和 prototype
 
-__proto__ ， 每一个对象对应一个原型对象，并从原先对象继承属性和方法
-
-对象 proto **属性**的值就是它所对应的**原型对象**  
+假设有对象啊，如何寻找对象a 委托的对象(如果存在的话)呢?在传统的面向类环境中，检查一个实例(javascript中的对象)的集成祖先(javascript） 中的委托关联)通常被称为内省（或者反射）。
 
 ```javascript
-var one = {x: 1};
-var two = new Object();
-one.__proto__ === Object.prototype // true
-two.__proto__ === Object.prototype // true
-one.toString === one.__proto__.toString // true
+//可以直接获取一个对象的[[prototype]]链
+Object.getPrototypeOf(a);
 ```
+
+绝大多数（非所有）浏览器也支持一种非标准的方法来访问内部[[prototype]]属性。
+
+```javascript
+a.__proto__ === Foo.prototype; // true
+```
+
+.__proto__ 属性神奇地引用内部 [[Prototype]] 对象，甚至可以通过 .__proto__._proto_...来遍历原型链，和 .constructor 一样，._proto_ 实际上并不存在你正在使用的对象中，和其他的常用函数一样，存在于内置的 Object.prototype中。此外，._proto_看起来像一个属性，但实际上更像一个 getter/setter，._proto_的实现大致是这样的：
+
+```javascript
+Object.defineProperty( Object.prototype, "__proto__", {
+	get: function() {
+		return Object.getPrototypeOf( this );
+	},
+	set: function(o) {
+		// ES6 中的 setPrototypeOf(..)
+		Object.setPrototypeOf( this, o );
+		return o;
+	}
+} );
+```
+
+因此，访问 a._proto_时，实际上是调用了 a._proto_()，虽然 getter函数存在于 Object.prototype对象中，但是它的 this 指向对象a，所以和 Object.getPrototype(a)结果相同。._proto_ 是可设置属性，之前的代码中使用 es6 的 Object.setPrototype 进行设置。
+
+出于各种原因，以继承结尾的术语，包括原型继承和其他面向对象的术语都无法帮助理解 Javascript 的真实机制，不仅仅限制思维模式。相比**委托**更合适，因为对象之间的关系不是复制而是委托。
+
+
+
+### 委托（或继承）
 
 
 

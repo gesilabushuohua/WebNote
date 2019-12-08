@@ -1,6 +1,11 @@
 /** js 继承方式
- *  参考来源 JavaScript 高级程序设计(第3版) 6.3 继承
+ *  参考来源 JavaScript 高级程序设计(第3版) 6.3 继承 
+ 
  */
+
+
+
+继承的底层方法差别，优缺点
 
 //  父类
 function Father(name) {
