@@ -1,7 +1,11 @@
 /** js 继承方式
- *  参考来源 JavaScript 高级程序设计(第3版) 6.3 继承 
- 
+ *  参考来源 
+ *  JavaScript 高级程序设计(第3版) 6.3 继承 
+ *  你不知道的Javascript(上卷)  第二部分 第5章原型 第6章委托
+
  */
+
+继承是一个将对象复制到另一个对象中，js 不存在真正意义上的继承，而是使用原型将对象关联起来，使用委托，更易理解。
 
 
 
@@ -234,6 +238,18 @@ yetAnotherPerson.friends.push("Barbie");
 console.log(person.friends); //"Shelby,Court,Van,Rob,Barbie"
 console.log({person,anotherPerson,yetAnotherPerson}); 
 ```
+
+
+
+### 对象关联委托
+
+使用对象风格委托可以使代码更简洁易懂，如下
+
+
+
+在委托设计模式中，除建议使用不相同并且更具描述性的方法名之外，还要通过对象关联避免丑陋的显示委托多态调用（widget.call 和 widget.prototype.render.call），代之以简单相对委托调用委托使用 this.init 和 this.insert
+
+
 
 /*  扩展
 1、js 原型链

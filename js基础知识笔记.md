@@ -614,13 +614,27 @@ Object.defineProperty( Object.prototype, "__proto__", {
 
 
 
-### 委托（或继承）
-
 
 
 # 三、类型和语法
 
-类型和语法
+js 类型
+
+- Null
+- Undefined
+- Boolean
+- Number
+- String
+- Object
+- Symbal es6
+
+除 Object 外，其他统称基本类型。
+
+```javascript
+typeof null === 'object';//true
+```
+
+null 比较特殊，typeof 对它处理有问题，正确的结果应是 null
 
 ### 数组
 
