@@ -576,6 +576,8 @@ Object.setPrototypeOf( Bar.prototype, Foo.prototype );
 
 Object.create() 会创 建一个对象，并把这个对象的 [[ Prototype ]] 关联到指定的对象。
 
+[[prototype]] 机制就是指对象中的一个内部连接引用另一个对象。
+
 
 
 ### proto  和 prototype
