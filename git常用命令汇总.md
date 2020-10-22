@@ -1,12 +1,15 @@
-## 配置git
+## 配置 git
 
 1. 配置账号
 
    ```
-   
+   git config --global user.name "name"
    ```
 
 2. 配置邮件
+   ```
+   git config --global user.email "email"
+   ```
 
 3. 配置密码缓存
 
@@ -17,9 +20,16 @@
    git config
    ```
 
-4. 其他
+4. 生成密钥
+   ssh-keygen -t rsa -C "526861348@qq.com"
+
+5. 查询公钥
+   cat ~/.ssh/id_rsa.pub
+   
+6.复制公钥到账户设置密钥配置中
 
 ## 仓库
+
 
 ## 分支
 
