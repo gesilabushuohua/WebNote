@@ -34,9 +34,17 @@
 ## 分支
 
 ```
-# 创建分支
-git checkout master -b xxx
+# 查看目录所在分支
+git branch -a
 
+# 创建分支 xxx
+git branch xxx
+
+# 切换到分支 xxx
+git checkout xxx
+
+# 创建切换到分支
+git checkout master -b xxx
 ```
 
 
