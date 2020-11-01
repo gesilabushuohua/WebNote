@@ -50,10 +50,22 @@ git checkout master -b xxx
 
 
 ## 开发
+```
+// 从远程仓库 clone 到本地
+git clone url
 
-1. 下拉
-2. 上传
-3.  
+// 检查当前文件修改状态
+git status
+
+// 将本地修改文件添加到本地 git 缓存中
+git add .
+
+// 推送修改到本地 git 库中
+git commit -m ""
+
+// 取回远程某个分支的更新，再与本地指定分支合并
+git pull origin branchname
+```
 
 ## 其他
 
