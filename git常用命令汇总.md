@@ -37,9 +37,15 @@ ssh-keygen -t rsa -C "xxxxxx@qq.com" 生成密钥
 
 2、添加新ssh key
 默认SSH只会读取id_rsa，所以为了让SSH识别新的私钥，需要将其添加到SSH agent
+```
 ssh-add ~/.ssh/id_rsa_me
+```
 如果报错：Could not open a connection to your authentication agent.无法连接到ssh agent
-可执行ssh-agent bash命令后再执行ssh-add命
+可执行
+```
+ssh-agent bash
+```
+命令后再执行ssh-add命
 要用 git 工具， powershell 报错
 
 3、查看.ssh文件中是否存在config文件
