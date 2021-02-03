@@ -32,6 +32,8 @@
 
 ## 多账号
 1、生成密钥命名区别开
+ssh-keygen -t rsa -C "xxxxxx@qq.com" 生成密钥
+输入保存 id_rsa_me 自定义命名
 
 2、添加新ssh key
 默认SSH只会读取id_rsa，所以为了让SSH识别新的私钥，需要将其添加到SSH agent
