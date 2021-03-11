@@ -1,6 +1,6 @@
 ## Vue 响应式图
 
-![](D:\github\WebNote\images\vue响应式.png)
+https://github.com/gesilabushuohua/WebNote/blob/master/images/vue%E5%93%8D%E5%BA%94%E5%BC%8F.png
 
 ## Vue 响应式实现
 
