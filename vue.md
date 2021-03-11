@@ -2,9 +2,7 @@
 
 ## 初始化
 
-响应式
-
-生命周期
+Vue.use
 
 vue-cli 中加载 vue 文件之  vue-loader
 
