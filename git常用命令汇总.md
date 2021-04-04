@@ -28,6 +28,7 @@
 5. 查询公钥
    cat ~/.ssh/id_rsa.pub
    
+
 6.复制公钥到账户设置密钥配置中
 
 ## 多账号
@@ -64,7 +65,29 @@ git clone gitlab.com/xxx.git
 4、测试是否配置成功
 ssh -T git@zc
 git clone
-## 仓库
+
+## 创建仓库
+
+```
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:xxx/xxx.git
+git push -u origin main
+```
+
+## 推送存在的分支
+
+```
+git init
+git add .
+git remote add origin git@github.com:gesilabushuohua/UIcomponentsserve.git
+git branch -M main
+git push -u origin main
+```
+
+
 
 
 ## 分支
@@ -117,7 +140,9 @@ chore: 跟仓库主要业务无关的构建/工程依赖/工具等功能改动�
 
 git  查询命令配置
 
-## 
+## 解决冲突
+
+## 合并代码
 
 
 

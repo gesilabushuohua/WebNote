@@ -1,6 +1,6 @@
 ## Vue 响应式图
 
-https://github.com/gesilabushuohua/WebNote/blob/master/images/vue%E5%93%8D%E5%BA%94%E5%BC%8F.png
+![](.\images\vue响应式.png)
 
 ## Vue 响应式实现
 
@@ -57,6 +57,8 @@ function defineReactive(obj, key, val) {
 }
 
 // es6 proxy 实现
+// proxy 不需要深度遍历监听，性能高于 Object.defineProperty
+// 可监听数组对象变化
 /*
 function defineReactive(obj, key, val) {
   const dep = new Dep();
@@ -122,4 +124,102 @@ class Watcher {
 Dep.target = null;
 
 ```
+
+## 响应式之数组
+
+原理，给数组对象设置新的原型对象，屏蔽原生数组变异方法， ob.dep.notify() 通知变化
+
+即，重写数组原型
+
+```javascript
+// 源码
+function observe(value) {
+  ob = new Observer(value)  
+}
+
+// 数组处理
+class Observer {
+  constructor (value) {
+    if (Array.isArray(value)) {
+      // 给数组对象设置新的原型对象，屏蔽原生数组变异方法  
+      if (hasProto) {
+        protoAugment(value, arrayMethods)
+      } else {
+        copyAugment(value, arrayMethods, arrayKeys)
+      }
+      this.observeArray(value)
+    }  
+  }  
+}
+
+const arrayProto = Array.prototype
+export const arrayMethods = Object.create(arrayProto)
+
+function protoAugment (target, src: Object) {
+  target.__proto__ = src
+}
+
+function copyAugment (target: Object, src: Object, keys: Array<string>) {
+  for (let i = 0, l = keys.length; i < l; i++) {
+    const key = keys[i]
+    def(target, key, src[key])
+  }
+}
+
+const methodsToPatch = [
+  'push',
+  'pop',
+  'shift',
+  'unshift',
+  'splice',
+  'sort',
+  'reverse'
+]
+
+
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    if (inserted) ob.observeArray(inserted)
+    // 数组更新  
+    // notify change
+    ob.dep.notify()
+    return result
+  })
+})
+```
+
+## Object.defineProperty 缺点
+
+### 无法检测对象属性的新增或删除
+
+this.productData = Object.assign({}, this.productData, res) 
+
+更新 data[key] 的属性，引起数据更新
+
+### 无法监听数组
+
+- Object.defineProperty  可以检测数组变动；
+- arr[5] = xxx, 可能是新增属性；
+- arr[1000] 有效值也许仅有几个，另外遍历属性添加监听，消耗大；
+- vue 对性能的取舍
+
+
+
+## 参考：
+
+[Vue为什么不能检测数组变动]: https://segmentfault.com/a/1190000015783546
 
