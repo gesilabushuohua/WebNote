@@ -38,6 +38,8 @@ function initData {
 
 ## initComputed
 
+![](.\images\vue-computed.png)
+
 ```javascript
 function initComputed () {
   const watchers = vm._computedWatchers = Object.create(null)
