@@ -1,51 +1,129 @@
 # Vue
 
-## 初始化
+## 使用
 
-Vue.use
+```javascript
+import Vue from 'vue';
 
-vue-cli 中加载 vue 文件之  vue-loader
+new Vue({
+  render: h => h(component),
+  // router
+}).$mount('#app');
+```
 
-## computed  watch
+
+
+## Vue 实例
+
+![](.\images\vue实例.png)
+
+
+
+## initData
+
+```javascript
+function initData {
+  let data = vm.$options.data
+  // 组件复用，不为函数，实例保持同一个对象的引用，导致数据污染
+  data = vm._data = typeof data === 'function'
+    ? getData(data, vm)   // data.call(vm, vm)
+    : data || {}
+  
+  // 数据响应式处理
+  observe(data, true /* asRootData */)  
+}
+```
+
+
+
+## initComputed
+
+```javascript
+function initComputed () {
+  const watchers = vm._computedWatchers = Object.create(null)
+  // 每个 computed 创建一个 watcher
+  watchers[key] = new Watcher(
+        vm,
+        getter || noop,
+        noop,
+        { lazy: true }  // this.dirty = this.lazy = true
+   )
+  defineComputed()  
+}
+
+function  defineComputed () {
+  const shouldCache = !isServerRendering()  
+  sharedPropertyDefinition.get = shouldCache
+      ? createComputedGetter(key)
+      : createGetterInvoker(userDef)
+    sharedPropertyDefinition.set = noop  
+  
+  // 拦截 get  this.xxx 触发
+  Object.defineProperty(target, key, sharedPropertyDefinition)  
+}
+
+function createComputedGetter () {
+   return function computedGetter () {
+     const watcher = this._computedWatchers && this._computedWatchers[key]
+     // true, 计算属性需要重新计算
+     if (watcher.dirty) {
+        watcher.evaluate()
+        // this.get-> pushTarget(computed-watcher) 当前 Dep.target 指向 computed-watcher
+        // -> this.getter.call(vm, vm) 即 this.xxx 触发 data.get data-dep 收集到 computed-watcher, computed-watcher 收集 data-dep
+        // popTarget() 当前 Dep.target 指向 render-watcher
+        
+        // this.dirty = false  
+        // data set, data dep 中 watcher update 时 this.dirty = true 重新计算 
+      }
+       
+      if (Dep.target) {
+        // computer dep 收集到 render-watcher
+        // render-watcher 不收重复 dep  
+        watcher.depend()
+      }
+      return watcher.value  
+   } 
+} 
+```
+
+
+
+## computed 、watch 对比
 
 - computed 具有缓存，默认只有 getter
 - watch 可以定义函数
 
-```
-// computeed
-
-opts.computed
-const watchers = vm._computedWatchers = Object.create(null)
-const watcher = this._computedWatchers && this._computedWatchers[key]
-if (Dep.target) {
-   watcher.depend()
-}
-Dep.target.addDep(this)
-```
 
 
-
-## data 为函数
+## KeepAlive
 
 ```javascript
-// 源码
-function initData (vm: Component) {
-   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
-    : data || {}  
-}
+// 挂载组件 KeepAlive
+extend(Vue.options.components, builtInComponents)
 
-function getData (data: Function, vm: Component) {
-  // 与组件实例绑定  
-  return data.call(vm, vm)  
+const slot = this.$slots.default
+const vnode: VNode = getFirstComponentChild(slot)
+
+if (cache[key]) {
+  vnode.componentInstance = cache[key].componentInstance
+  // make current key freshest
+   remove(keys, key)
+   keys.push(key)
+} else {
+   cache[key] = vnode
+   eys.push(key)
+   // prune oldest entry
+   if (this.max && keys.length > parseInt(this.max)) {
+      pruneCacheEntry(cache, keys[0], keys, this._vnode)
+    }
 }
 ```
 
-data 为函数，会绑定组件实例 vm;
 
-不为函数，相当于全局声明，相当于 多个子组件共享一个 data 对象；
 
-## Diff
+## path 中 Diff
+
+vue 中 **Vue.prototype.patch** 实现
 
 diff 只会同层级进行，不会跨层级比较
 
@@ -88,13 +166,13 @@ function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly
         oldEndVnode = oldCh[--oldEndIdx]
         newEndVnode = newCh[--newEndIdx]
       } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right
-        // 为什么要这样比较？ 猜测排序  
+        //排序  
         patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx)
         canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))
         oldStartVnode = oldCh[++oldStartIdx]
         newEndVnode = newCh[--newEndIdx]
       } else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left
-        // 为什么要这样比较？ 猜测排序   
+        // 排序   
         patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
         canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
         oldEndVnode = oldCh[--oldEndIdx]
@@ -181,6 +259,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   }
 }
 
+// 事件循环，宏任务、微任务，栗子 for(let i) { setTimeout(()=>{ console.log(i) }, 0) }
  timerFunc = () => {
     p.then(flushCallbacks)
     if (isIOS) setTimeout(noop)
