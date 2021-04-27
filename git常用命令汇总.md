@@ -135,6 +135,19 @@ git commit -m ""
 git pull origin branchname
 ```
 
+## stash 暂存
+```bash
+// 暂存当前操作
+git stash
+git stash list
+// 恢复暂存
+git stash pop
+// 删除暂存
+git stash drop
+// 删除所有暂存
+git stash clear
+```
+
 ## 开发规范
 feat: 一个新特性
 fix: 修了一个 Bug
