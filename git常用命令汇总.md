@@ -76,7 +76,7 @@ ssh -T git@zc
 git clone
 
 ## 创建仓库
-
+需要先创建 git 仓库
 ```
 git init
 git add README.md
@@ -91,12 +91,10 @@ git push -u origin main
 ```
 git init
 git add .
-git remote add origin git@github.com:gesilabushuohua/UIcomponentsserve.git
+git remote add origin git@github.com:xxxx/xxx.git
 git branch -M main
 git push -u origin main
 ```
-
-
 
 
 ## 分支
