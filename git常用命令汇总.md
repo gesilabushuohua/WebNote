@@ -113,7 +113,26 @@ git checkout xxx
 git checkout master -b xxx
 ```
 
+## 创建 tag
+```shell
+// 列出已有的 tag
+git tag
 
+// 新建 tag
+git tag tagName
+
+// 查看 tag 详细信息
+git show tagName
+
+// 同步到远程服务器
+git push origin tagName
+
+// 删除本地某个 tag
+git tag -d tagName
+
+// 远端删除 tag
+git push origin :tagName
+```
 
 ## 开发常用命令
 ```
