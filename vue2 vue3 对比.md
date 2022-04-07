@@ -109,4 +109,23 @@ console.log(book.title) // 'Vue 3 Detailed Guide'
 ## readonly
 readonly 可以基于原始对象创建一个只读的 proxy 对象。
 
-## 待更新 2020/04/06
+## 调试 computed 3.2+
+computed 可接受一个带 onTrack 和 onTrigger 选项的对象作为第二个参数
+* onTrack 会在某个响应式 property 或 ref 作为依赖被追踪时调用
+* onTrigger 会在侦听回调被某个依赖修改触发时修改调用
+
+## watchEffect ???
+watchEffect 根据响应式自动应用和重新副作用
+
+## watche 监听多个数据源
+```javascript
+const firstName = ref('')
+const lastName = ref('')
+
+watch([firstName, lastName], (newValues, prevValues) => {
+  console.log(newValues, prevValues)
+})
+
+firstName.value = 'John' // logs: ["John", ""] ["", ""]
+lastName.value = 'Smith' // logs: ["John", "Smith"] ["John", ""]
+```
