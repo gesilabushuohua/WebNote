@@ -1,5 +1,7 @@
 # Vue
 
+vue 源码，项目 package.json 查看项目入口
+对着 生命周期图 对比更有效
 ## 使用
 
 ```javascript
@@ -95,7 +97,39 @@ function createComputedGetter () {
 - computed 具有缓存，默认只有 getter
 - watch 可以定义函数
 
+## mount 模板解析
+对照 Vue 生命周期
+1. has el option ？ (no， el 非 dom 节点， document.createElement('div'))
+2. has template ？
+3. yes template to render function
+4. no complier el getoutHtml to template, to 3
+5. create vm.$el replace el with it
 
+### template to render funtion
+ <template><div v-for="index in 8">{{index}}</div></template> 转换成 html 过程
+
+```javascript
+    // parseHTML->stack 解析字符串->ASTElement 对象
+    const ast = parse(template.trim(), options);
+    // 标记 type === 3， text，node.static = true 标记 text 
+    optimize(ast, options);
+    /** render 字符串
+    `_c('validate',{props:{
+            field:${JSON.stringify(el.validate.field)},
+            groups:${JSON.stringify(el.validate.groups)},
+            validators:${JSON.stringify(el.validators)},
+            result:${JSON.stringify(result)},
+            child:${code}}
+          })`
+    */
+    const code = generate(ast, options);
+    // render: `with(this){return ${code}}`,
+    const render = code.render;
+    // options.render = new Function(code) 返回为 html string
+    options.render = createFunction(compiled.render, fnGenErrors)
+
+    // render function to vm.$el 的过程
+```
 
 ## KeepAlive
 
