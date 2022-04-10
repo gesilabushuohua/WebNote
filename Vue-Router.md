@@ -286,13 +286,13 @@ function pushState (url?: string, replace?: boolean) {
 
 ### 核心
 
-**监听**浏览器url变化，改变页面元素，思路锚点  
+**监听**浏览器url变化，改变页面元素，添加 window.addEventListener('popstate', handleEvent)
 
-**改变**浏览器 url  history.pushState({ key: setStateKey(genStateKey()) }, '', url)、history.replaceState(stateCopy, '', url)，不刷新页面，不触发 popstate 事件，会触发 hashchange 事件
+**改变**浏览器 url  history.pushState({ key: setStateKey(genStateKey()) }, '', url)、history.replaceState(stateCopy, '', url)，触发 popstate 事件，会触发 
 
-popstate 事件，只有 history 实体变化才触发，hashchange 事件，当URL的片段变更时
-
-hash 模式下，hashchange 避免死循环使用
+popstate 事件，只有 history 实体变化才触发，
+popstate事件一般与pushState()和replaceState()这两个方法搭配使用
+hashchange 事件，当URL的片段变更时使用，hash 模式下，hashchange 避免死循环使用
 
 ```javascript
 // pushHash
